@@ -1,114 +1,112 @@
+print("=== Player Inventory System ===")
 
-print("=== Player Inventory System ===\n")
+game_inventory = {
+    "players": {
+        "alice": {
+            "items": {
+                "sword": 1,
+                "potion": 5,
+                "shield": 1,
+                "magic_ring": 1,
+            },
+            "total_value": 1950,
+            "item_count": 7,
+        },
+        "bob": {
+            "items": { 
+                "sword": 1,
+                "potion": 0,
+                "shield": 2,
+                "magic_ring": 3,},
+            "total_value": 3900,
+            "item_count": 6,
+        },
+    },
+    "catalog": {
+        "sword": {"type": "weapon", "value": 500, "rarity": "rare"},
+        "magic_ring": {"type": "accessory", "value": 1000, "rarity": "legendary"},
+        "potion": {"type": "consumable", "value": 50, "rarity": "common"},
+        "shield": {"type": "armor", "value": 200, "rarity": "uncommon"},
+    },
+}
 
-alice_inventory = dict(
-    sword=dict(
-        category="weapon",
-        rarity="rare",
-        quantity=1,
-        value=500,
-    ),
-    potion=dict(
-        category="consumable",
-        rarity="common",
-        quantity=5,
-        value=50,
-    ),
-    shield=dict(
-        category="armor",
-        rarity="uncommon",
-        quantity=1,
-        value=200,
-    ),
-)
 
-bob_inventory = dict(
-    potion=dict(
-        category="consumable",
-        rarity="common",
-        quantity=0,
-        value=50,
-    ),
-    magic_ring=dict(
-        category="accessory",
-        rarity="legendary",
-        quantity=1,
-        value=1000,
-    ),
-)
+def print_inventory(player_name):
+    player_items = game_inventory["players"][player_name]["items"]
+    catalog = game_inventory["catalog"]
+    total_value = 0
+    total_items = 0
+    weapon_count = 0
+    consumable_count = 0
+    armor_count = 0
+    print(f"=== {player_name.capitalize()}'s Inventory ===")
+    for item, qty in player_items.items():
+        value = catalog[item]["value"]
+        category = catalog[item]["type"]
+        rarity = catalog[item]["rarity"]
+        total = value * qty
+        total_value += total
+        total_items += qty
+        if category == "weapon":
+            weapon_count += qty
+        elif category == "consumable":
+            consumable_count += qty
+        elif category == "armor":
+            armor_count += qty
+        print(f"{item} ({category}, {rarity}): {qty}x @ {value} gold each = {total} gold")
+    print(f"Inventory value: {total_value} gold")
+    print(f"Item count: {total_items} items")
+    print(f"Categories: weapon({weapon_count}), consumable({consumable_count}), armor({armor_count})")
 
-print("=== Alice's Inventory ===")
 
-total_value = 0
-total_items = 0
+def transfer_item(sender, receiver, item_name, amount):
+    sender_items = game_inventory["players"][sender]["items"]
+    receiver_items = game_inventory["players"][receiver]["items"]
+    print(f"=== Transaction: {sender.capitalize()} gives {receiver.capitalize()} {amount} {item_name}s ===")
+    if sender_items.get(item_name, 0) < amount:
+        print("failure transaction!")
+        return
+    sender_items[item_name] -= amount
+    receiver_items[item_name] = receiver_items.get(item_name, 0) + amount
+    print("Transaction successful!")
 
-weapon_count = 0
-consumable_count = 0
-armor_count = 0
 
-for item, data in alice_inventory.items():
-    item_value = data["quantity"] * data["value"]
-    total_value = total_value + item_value
-    total_items = total_items + data["quantity"]
+def inventory_analytics():
+    max_value = 0
+    max_items = 0
+    valuable_player = ""
+    items_player = ""
+    all_items = []
+    catalog = game_inventory["catalog"]
+    for player, data in game_inventory["players"].items():
+        value = sum(catalog[item]["value"] * qty for item, qty in data["items"].items())
+        if value > max_value:
+            max_value = value
+            valuable_player = player
+        count = sum(data["items"].values())
+        if count > max_items:
+            max_items = count
+            items_player = player
+        all_items.extend(data["items"].keys())
+    rare_items = []
+    max_rarity = {"common": 1, "uncommon": 2, "rare": 3, "legendary": 4}
+    highest = 0
+    for item in set(all_items):
+        rarity_score = max_rarity[catalog[item]["rarity"]]
+        if rarity_score > highest:
+            highest = rarity_score
+            rare_items = [item]
+        elif rarity_score == highest:
+            rare_items.append(item)
+    print("=== Inventory Analytics ===")
+    print(f"Most valuable player: {valuable_player.capitalize()} ({max_value} gold)")
+    print(f"Most items: {items_player.capitalize()} ({max_items} items)")
+    print(f"Rarest items: {', '.join(rare_items)}")
 
-    if data["category"] == "weapon":
-        weapon_count = weapon_count + data["quantity"]
-    if data["category"] == "consumable":
-        consumable_count = consumable_count + data["quantity"]
-    if data["category"] == "armor":
-        armor_count = armor_count + data["quantity"]
 
-    print(
-        item,
-        "(" + data["category"] + ", " + data["rarity"] + "):",
-        str(data["quantity"]) + "x",
-        "@",
-        data["value"],
-        "gold each =",
-        item_value,
-        "gold",
-    )
-print()
-
-print("Inventory value:", total_value, "gold")
-print("Item count:", total_items, "items")
-print(
-    "Categories: weapon(" + str(weapon_count) + "), "
-    "consumable(" + str(consumable_count) + "), "
-    "armor(" + str(armor_count) + ")"
-)
-print()
-
-print("=== Transaction: Alice gives Bob 2 potions ===")
-
-alice_inventory["potion"]["quantity"] = (
-    alice_inventory["potion"]["quantity"] - 2
-)
-bob_inventory["potion"]["quantity"] = (
-    bob_inventory["potion"]["quantity"] + 2
-)
-
-print("Transaction successful!")
-print()
-
+print_inventory("alice")
+transfer_item("alice", "bob", "potion", 2)
 print("=== Updated Inventories ===")
-print("Alice potions:", alice_inventory["potion"]["quantity"])
-print("Bob potions:", bob_inventory["potion"]["quantity"])
-print()
-
-print("=== Inventory Analytics ===")
-
-alice_value = 0
-alice_items = 0
-
-for data in alice_inventory.values():
-    alice_value = alice_value + data["quantity"] * data["value"]
-    alice_items = alice_items + data["quantity"]
-
-print(
-    "Most valuable player: Alice (" + str(alice_value) + " gold)"
-)
-print(
-    "Most items: Alice (" + str(alice_items) + " items)"
-)
-print("Rarest items: sword, magic_ring")
+print(f"Alice potions: {game_inventory['players']['alice']['items'].get('potion',0)}")
+print(f"Bob potions: {game_inventory['players']['bob']['items'].get('potion',0)}")
+inventory_analytics()
