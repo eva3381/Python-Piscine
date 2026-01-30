@@ -1,3 +1,10 @@
+"""
+Achievement Tracker System Module.
+This script manages player achievements using Python Sets. It demonstrates 
+how to perform set operations like union, intersection, and difference 
+to find commonalities and unique items across multiple players.
+"""
+
 print("=== Achievement Tracker System ===\n")
 
 alice = set(

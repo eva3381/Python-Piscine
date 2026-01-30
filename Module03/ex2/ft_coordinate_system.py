@@ -1,10 +1,19 @@
-
 import sys
 import math
 
+"""
+Game Coordinate System Module.
+This script parses 3D coordinates from command-line strings, calculates 
+their Euclidean distance from the origin (0,0,0), and demonstrates 
+tuple unpacking for coordinate management.
+"""
 
 def main():
-
+    """
+    Main execution logic for coordinate processing.
+    It splits input strings, validates integer conversion, calculates 
+    3D distances, and performs tuple unpacking for the first valid position.
+    """
     print("=== Game Coordinate System ===")
 
     if len(sys.argv) <= 1:
@@ -25,8 +34,10 @@ def main():
             z = int(parts[2])
             pos = tuple((x, y, z))
             print(f"Parsed position: {pos}")
-            dist = math.sqrt((x - 0)**2 + (y - 0)**2 + (z - 0)**2)
+            
+            dist = math.sqrt(x**2 + y**2 + z**2)
             print(f"Distance between (0, 0, 0) and {pos}: {round(dist, 2)}")
+            
             if first_valid is None:
                 first_valid = pos
         except Exception as e:
@@ -38,7 +49,6 @@ def main():
         px, py, pz = first_valid
         print(f"Player at x={px}, y={py}, z={pz}")
         print(f"Coordinates: X={px}, Y={py}, Z={pz}")
-
 
 if __name__ == "__main__":
     main()

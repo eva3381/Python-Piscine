@@ -1,3 +1,9 @@
+"""
+Data Alchemist Analytics Module.
+This script utilizes advanced Python comprehensions (List, Dict, and Set) 
+to process complex game data structures, generating statistical summaries 
+and identifying unique game-wide achievements.
+"""
 print("=== Game Analytics Dashboard ===\n")
 
 game_data = {
