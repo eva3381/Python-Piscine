@@ -1,5 +1,5 @@
 from abc import ABC, abstractmethod
-from typing import Any, List, Dict, Optional, Union
+from typing import Any, List, Dict
 
 
 class PipelineStage(ABC):
@@ -69,7 +69,7 @@ class ProcessingPipeline:
         return self.execute(data)
 
     def execute(self, data: Any) -> Any:
-        """Execute stages sequentially with an error recovery mechanism."""
+        """Execute stages sequentially with error recovery."""
         current_result = data
         try:
             for stage in self.stages:
@@ -81,7 +81,7 @@ class ProcessingPipeline:
             return self.handle_error(data, e)
 
     def handle_error(self, data: Any, error: Exception) -> Any:
-        """Recovery mechanism: logs error and returns a safe fallback."""
+        """Recovery mechanism: logs error and returns fallback."""
         print(f"Error detected in pipeline {self.pipeline_id}: {error}")
         print("Recovery initiated: Switching to backup processor")
         return f"Recovered data from {self.pipeline_id} failure"
@@ -100,7 +100,9 @@ class JSONAdapter(ProcessingPipeline):
     def process(self, data: Any) -> Any:
         """Process JSON data with format-specific logging."""
         try:
-            print(f"Processing JSON data through pipeline {self.pipeline_id}...")
+            msg = (f"Processing JSON data through pipeline "
+                   f"{self.pipeline_id}...")
+            print(msg)
             print(f"Input: {data}")
             return super().process(data)
         except Exception as e:
@@ -120,7 +122,8 @@ class CSVAdapter(ProcessingPipeline):
     def process(self, data: Any) -> Any:
         """Process CSV data with format-specific logging."""
         try:
-            print(f"Processing CSV data through pipeline {self.pipeline_id}...")
+            msg = f"Processing CSV data through pipeline {self.pipeline_id}..."
+            print(msg)
             print(f"Input: \"{data}\"")
             return super().process(data)
         except Exception as e:
@@ -140,7 +143,9 @@ class StreamAdapter(ProcessingPipeline):
     def process(self, data: Any) -> Any:
         """Process stream data with format-specific logging."""
         try:
-            print(f"Processing Stream data through pipeline {self.pipeline_id}...")
+            msg = (f"Processing Stream data through "
+                   f"pipeline {self.pipeline_id}...")
+            print(msg)
             print(f"Input: {data}")
             return super().process(data)
         except Exception as e:
@@ -160,7 +165,7 @@ class NexusManager:
         self.pipelines.append(pipeline)
 
     def execute_all(self, data: Any) -> List[Any]:
-        """Execute all registered pipelines and capture results safely."""
+        """Execute all registered pipelines and capture results."""
         results: List[Any] = []
         for pipeline in self.pipelines:
             try:
@@ -173,7 +178,7 @@ class NexusManager:
 if __name__ == "__main__":
     print("=== CODE NEXUS - ENTERPRISE PIPELINE SYSTEM ===")
     print("Initializing Nexus Manager...")
-    print(f"Pipeline capacity: 1000 streams/second\n")
+    print("Pipeline capacity: 1000 streams/second\n")
 
     print("=== Multi-Format Data Processing ===")
     json_adapter = JSONAdapter("json_nexus_1")
@@ -183,6 +188,7 @@ if __name__ == "__main__":
     csv_adapter = CSVAdapter("csv_nexus_1")
     csv_adapter.process("user,action,timestamp")
     print("Output: User activity logged: 1 actions processed\n")
+
     print("=== Error Recovery Test ===")
     print("Simulating pipeline failure...")
     json_adapter.process(None)

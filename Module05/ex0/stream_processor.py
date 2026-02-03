@@ -99,7 +99,8 @@ class LogProcessor(DataProcessor):
         """Format log processing results."""
         try:
             tag: str = "[ALERT]" if data.get("level") == "ERROR" else "[INFO]"
-            return f"{tag} {data.get('level')} level detected: {data.get('message')}"
+            return (f"{tag} {data.get('level')} "
+                    f"level detected: {data.get('message')}")
         except Exception:
             return "Log formatting failed"
 
