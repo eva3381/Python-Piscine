@@ -1,0 +1,17 @@
+[tool.poetry]
+name = "matrix-operator"
+version = "0.1.0"
+description = "Training program for data architecture"
+authors = ["Guillermo"]
+
+[tool.poetry.dependencies]
+python = "3.13.3"
+pandas = "2.3.3"
+matplotlib = "3.10.0"
+requests = "2.32.5"
+numpy = "2.4.1"
+python-dotenv = "^1.0.1"
+
+[build-systems]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
