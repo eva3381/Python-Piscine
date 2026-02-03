@@ -1,5 +1,5 @@
 from abc import ABC, abstractmethod
-from typing import Any, List, Dict
+from typing import Any, List
 
 
 class PipelineStage(ABC):
@@ -45,7 +45,6 @@ class OutputStage(PipelineStage):
             status = "Normal range" if 18 <= val <= 25 else "Out of range"
             print(f"Output: Processed temperature reading: {val}°C ({status})")
         elif isinstance(data, str) and "," in data:
-            # Dinámico: cuenta comas para determinar acciones/columnas
             count = len([x for x in data.split(",")]) - 2
             print(f"Output: User activity logged: {count} actions processed")
         else:
@@ -78,7 +77,7 @@ def main() -> None:
     print("=== CODE NEXUS - ENTERPRISE PIPELINE SYSTEM ===\n")
     print("Initializing Nexus Manager...")
     print("Pipeline capacity: 1000 streams/second\n")
-    
+
     print("Creating Data Processing Pipeline...")
     print("Stage 1: Input validation and parsing")
     print("Stage 2: Data transformation and enrichment")
@@ -87,7 +86,7 @@ def main() -> None:
     pipeline = ProcessingPipeline("nexus_main")
 
     print("=== Multi-Format Data Processing ===\n")
-    
+
     print("Processing JSON data through pipeline...")
     d_json = {"sensor": "temp", "value": 23.5, "unit": "C"}
     json_str = str(d_json).replace("'", '"')
@@ -99,7 +98,6 @@ def main() -> None:
     print(f'Input: "{d_csv}"')
     pipeline.process(d_csv)
 
-
     print("\nProcessing Stream data through same pipeline...")
     print("Input: Real-time sensor stream")
     pipeline.process("stream_data")
@@ -107,9 +105,11 @@ def main() -> None:
     print("\n=== Pipeline Chaining Demo ===")
     print("Pipeline A -> Pipeline B -> Pipeline C")
     print("Data flow: Raw -> Processed -> Analyzed -> Stored\n")
-    
+
     num_stages = len(pipeline.stages)
-    print(f"Chain result: 100 records processed through {num_stages}-stage pipeline")
+    res_msg = (f"Chain result: 100 records processed through "
+               f"{num_stages}-stage pipeline")
+    print(res_msg)
     print("Performance: 95% efficiency, 0.2s total processing time\n")
 
     print("=== Error Recovery Test ===")
@@ -119,7 +119,7 @@ def main() -> None:
     except Exception as e:
         print(f"Error detected in Stage 2: {e}")
         print("Recovery initiated: Switching to backup processor")
-    
+
     print("Recovery successful: Pipeline restored, processing resumed\n")
     print("Nexus Integration complete. All systems operational.")
 
