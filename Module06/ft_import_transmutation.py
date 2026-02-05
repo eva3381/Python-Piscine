@@ -1,25 +1,53 @@
 import alchemy.elements
-from alchemy import create_water
-from alchemy.potions import healing_potion as heal
-from alchemy.elements import create_fire, create_earth
-from alchemy.potions import strength_potion
+from alchemy.elements import create_fire
+from alchemy.elements import create_water, create_earth
+from alchemy.potions import healing_potion as heal, strength_potion
+
 
 print("=== Import Transmutation Mastery ===\n")
 
 print("Method 1 - Full module import:")
-fire = alchemy.elements.create_fire()
-print(f"alchemy.elements.create_fire(): {fire}\n")
+try:
+    print(
+        "alchemy.elements.create_fire(): "
+        f"{alchemy.elements.create_fire()}"
+    )
+except AttributeError:
+    print("alchemy.elements.create_fire(): AttributeError - not exposed")
 
-print("Method 2 - Specific function import:")
-water = create_water()
-print(f"create_water(): {water}")
-print()
-print("Method 3 - Aliased import:")
-print(f"heal(): {heal()}")
-print()
-print("Method 4 - Multiple imports:")
-print(f"create_earth(): {create_earth()}")
-print(f"create_fire(): {create_fire()}")
-print(f"strength_potion() {strength_potion()}")
-print()
-print("All import transmutation methods mastered!")
+print("\nMethod 2 - Specific function import:")
+try:
+    print(
+        "create_water(): "
+        f"{create_water()}"
+    )
+except AttributeError:
+    print("alchemy.create_water(): AttributeError - not exposed")
+
+print("\nMethod 3 - Aliased import:")
+try:
+    print(
+        "heal(): "
+        f"{heal()}"
+    )
+except AttributeError:
+    print("Error")
+
+print("\nMethod 4 - Multiple imports:")
+try:
+    print(
+        "create_earth(): "
+        f"{create_earth()}"
+    )
+    print(
+        "create_fire(): "
+        f"{create_fire()}"
+    )
+    print(
+        "strength_potion(): "
+        f"{strength_potion()}"
+    )
+except AttributeError:
+    print("Error")
+
+print("\nAll import transmutation methods mastered!")

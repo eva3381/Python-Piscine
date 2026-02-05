@@ -1,2 +1,2 @@
-from .spellbook import record_spell # noqaF104
-from .validator import validate_ingredients # noqaF104
+from .validator import validate_ingredients # noqa F401
+from .spellbook import record_spell # noqa F401
