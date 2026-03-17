@@ -1,0 +1,20 @@
+Sample Cards:
+Creature: {'name': 'Fire Dragon', 'cost': 5, 'rarity': 'Legendary', 'attack': 7, 'health': 5}
+Spell: {'name': 'Lightning Bolt', 'cost': 3, 'rarity': 'Common', 'effect_type': 'damage'}
+Artifact: {'name': 'Mana Crystal', 'cost': 2, 'rarity': 'Common', 'durability': 5, 'effect': 'Permanent: +1 mana per turn'}
+
+Random Cards:
+Random Creature: {'name': 'Healing Angel', 'cost': 4, 'rarity': 'Rare', 'attack': 2, 'health': 6}
+Random Spell: {'name': 'Magic Missile', 'cost': 1, 'rarity': 'Common', 'effect_type': 'damage'}
+
+Legendary Cards:
+Creatures: ['Fire Dragon']
+Spells: ['Meteor']
+Artifacts: ['Crown of Kings', 'Staff of Elements']
+
+Low Cost Cards (3 mana or less):
+Creatures: 4 cards
+Spells: 5 cards
+Artifacts: 4 cards
+
+Random Deck (5 cards): ['Crown of Kings', 'Stone Golem', 'Magic Missile', 'Meteor', 'Healing Angel']
