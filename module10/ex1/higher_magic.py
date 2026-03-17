@@ -1,6 +1,12 @@
 
 
 def spell_combiner(spell1: callable, spell2: callable) -> callable:
+    """Combines two distinct spells into a single simultaneous cast.
+
+    Returns:
+        A function that executes both spells and returns their results
+        as a tuple.
+    """
     def combined_spell(*args, **kwargs):
         res1 = spell1(*args, **kwargs)
         res2 = spell2(*args, **kwargs)
@@ -10,6 +16,12 @@ def spell_combiner(spell1: callable, spell2: callable) -> callable:
 
 
 def power_amplifier(base_spell: callable, multiplier: int) -> callable:
+    """Creates an amplified version of a numerical spell.
+
+    Args:
+        base_spell: The original spell function.
+        multiplier: Factor to increase the spell's output.
+    """
     def amplify(*args, **kwargs):
         result = base_spell(*args, **kwargs) * multiplier
         return (result)
@@ -17,6 +29,11 @@ def power_amplifier(base_spell: callable, multiplier: int) -> callable:
 
 
 def conditional_caster(condition: callable, spell: callable) -> callable:
+    """Wraps a spell with a logical requirement check before execution.
+
+    Returns:
+        The spell result if condition is met, otherwise 'Spell fizzled'.
+    """
     def condition_cast(*args, **kwargs):
         if condition(*args, **kwargs):
             return spell(*args, **kwargs)

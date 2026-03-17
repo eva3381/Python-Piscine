@@ -3,6 +3,12 @@ import operator
 
 
 def spell_reducer(spells: list[int], operation: str) -> int:
+    """Reduces a list of power values into a single result
+    using functional logic.
+
+    Args:
+        operation: One of 'add', 'multiply', 'max', or 'min'.
+    """
     signals = {
         'add': operator.add,
         'multiply': operator.mul,
@@ -23,6 +29,7 @@ def partial_enchanter(base_enchantment: callable) -> dict[str, callable]:
 
 @lru_cache(maxsize=None)
 def memoized_fibonacci(n: int) -> int:
+    """Calculates the Nth Fibonacci number with optimized recursive caching."""
     if n == 0:
         return 0
     elif n == 1:
@@ -50,20 +57,23 @@ def spell_dispatcher() -> callable:
 
 
 if __name__ == "__main__":
-    print("--- Testing Exercise 3: Ancient Library ---")
+    print("--- Testing Ancient Library ---")
 
     powers = [10, 5, 20, 8]
-    print(f"Reducer Max: {spell_reducer(powers, 'max')}")
-    print(f"Reducer Add: {spell_reducer(powers, 'add')}")
+    print()
+    print(f"Max: {spell_reducer(powers, 'max')}")
+    print(f"Sum: {spell_reducer(powers, 'add')}")
+    print(f"Product: {spell_reducer(powers, 'multiply')}\n")
 
     def base_spell(power, element, target):
         return f"Casting {element} ({power} power) on {target}"
 
     factory = partial_enchanter(base_spell)
     print(factory['ice_enchant']("Frost Giant"))
+    print()
 
     print(f"Fibonacci(50): {memoized_fibonacci(50)}")
-
+    print()
     cast = spell_dispatcher()
     print(cast(150))
     print(cast("Invisibility"))

@@ -1,67 +1,80 @@
-def mage_counter() -> callable:
-    count = 0
-
-    def m_counter():
-        nonlocal count
-        count += 1
-        return count
-    return m_counter
+from functools import reduce, partial, lru_cache, singledispatch
+import operator
 
 
-def spell_accumulator(initial_power: int) -> callable:
-    total_power = initial_power
+def spell_reducer(spells: list[int], operation: str) -> int:
+    """Reduces a list of power values into a single result
+    using functional logic.
 
-    def power(add_power: int):
-        nonlocal total_power
-        total_power += add_power
-        return total_power
-    return power
+    Args:
+        operation: One of 'add', 'multiply', 'max', or 'min'.
+    """
+    signals = {
+        'add': operator.add,
+        'multiply': operator.mul,
+        'max': max,
+        'min': min
+    }
+    result = reduce(signals[operation], spells)
+    return (result)
 
 
-def enchantment_factory(enchantment_type: str) -> callable:
-    def enchantment(item_name: str):
-        return f"{enchantment_type} {item_name}"
-    return enchantment
-
-
-def memory_vault() -> dict[str, callable]:
-    memory = {}
-
-    def store(**kwargs):
-        nonlocal memory
-        memory.update(kwargs)
-        return "Stored successfully"
-
-    def recall(key: str):
-        nonlocal memory
-        return memory.get(key, "Memory not found")
+def partial_enchanter(base_enchantment: callable) -> dict[str, callable]:
     return {
-        'store': store,
-        'recall': recall
+        'fire_enchant': partial(base_enchantment, 50, "fire"),
+        'ice_enchant': partial(base_enchantment, 50, "ice"),
+        'lightning_enchant': partial(base_enchantment, 50, "lightning")
     }
 
 
+@lru_cache(maxsize=None)
+def memoized_fibonacci(n: int) -> int:
+    """Calculates the Nth Fibonacci number with optimized recursive caching."""
+    if n == 0:
+        return 0
+    elif n == 1:
+        return 1
+    return memoized_fibonacci(n - 1) + memoized_fibonacci(n - 2)
+
+
+def spell_dispatcher() -> callable:
+    @singledispatch
+    def dispatcher(value: int):
+        return "Unknow spell type"
+
+    @dispatcher.register(int)
+    def _(spell: int):
+        return f"Damage spell: {spell} HP"
+
+    @dispatcher.register(str)
+    def _(spell: str):
+        return f"Enchantment : {spell}"
+
+    @dispatcher.register(list)
+    def _(spell: list):
+        return f"Multi-cast: {len(spell)} spells"
+    return dispatcher
+
+
 if __name__ == "__main__":
-    print("--- Testing Exercise 2: Memory Depths ---")
+    print("--- Testing Ancient Library ---")
 
-    print("\n1. Mage Counter:")
-    c1 = mage_counter()
-    print(f"Mage ID: {c1()}")
-    print(f"Mage ID: {c1()}")
+    powers = [10, 5, 20, 8]
+    print()
+    print(f"Max: {spell_reducer(powers, 'max')}")
+    print(f"Sum: {spell_reducer(powers, 'add')}")
+    print(f"Product: {spell_reducer(powers, 'multiply')}\n")
 
-    print("\n2. Spell Accumulator:")
-    acc = spell_accumulator(100)
-    print(f"Total Power: {acc(50)}")
-    print(f"Total Power: {acc(25)}")
+    def base_spell(power, element, target):
+        return f"Casting {element} ({power} power) on {target}"
 
-    print("\n3. Enchantment Factory:")
-    fire_enchant = enchantment_factory("Flaming")
-    ice_enchant = enchantment_factory("Frozen")
-    print(fire_enchant("Sword"))
-    print(ice_enchant("Shield"))
+    factory = partial_enchanter(base_spell)
+    print(factory['ice_enchant']("Frost Giant"))
+    print()
 
-    print("\n4. Memory Vault:")
-    vault = memory_vault()
-    vault['store'](fireball="A ball of fire", shield="Magic protection")
-    print(f"Recall fireball: {vault['recall']('fireball')}")
-    print(f"Recall fly: {vault['recall']('fly')}")
+    print(f"Fibonacci(50): {memoized_fibonacci(50)}")
+    print()
+    cast = spell_dispatcher()
+    print(cast(150))
+    print(cast("Invisibility"))
+    print(cast([1, 2, 3, 4]))
